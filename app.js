@@ -3,6 +3,8 @@ const app = express();
 const path = require('path');
 const mongoose = require('mongoose');
 const { log } = require('console');
+const seedDB = require('./seed');
+
 
 mongoose.connect('mongodb://127.0.0.1:27017/shopping')
 .then(()=>{
@@ -18,10 +20,8 @@ app.set('view engine', 'ejs');
 app.set('view' ,path.join(__dirname,'views'));
 app.use(express.static(path.join(__dirname,'public')));
 
-app.get('/',(req,res)=>{
-    res.send("Its really working")
-})
-
+// seeding DB
+// seedDB();
 
 
 

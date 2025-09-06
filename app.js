@@ -4,6 +4,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const { log } = require('console');
 const seedDB = require('./seed');
+const ProductRoutes = require('./routes/product');
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/shopping')
@@ -17,13 +18,13 @@ mongoose.connect('mongodb://127.0.0.1:27017/shopping')
 }) 
 
 app.set('view engine', 'ejs');
-app.set('view' ,path.join(__dirname,'views'));
+app.set('views' ,path.join(__dirname,'views'));
 app.use(express.static(path.join(__dirname,'public')));
 
 // seeding DB
 // seedDB();
 
-
+app.use(ProductRoutes);
 
 app.listen(8080, ()=>{
     console.log("Server connected at PORT 8080");

@@ -1,25 +1,26 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>all products are</h1>
+<% layout('./layouts/boilerplate') %>
 
-    <ul>
+<%- include("../partials/navbar") %>
+
+
+    <div class="row row-cols-1 row-cols-md-3 g-4 mt-3 mx-auto">
         <% for(let item of products){ %>
-            <li>
-                <img src="<%=item.img %>" alt="new imag" height="100px" width="100px">
-                <!-- <p><%=item.img %></p> -->
+            <div>
+                <div class="card" style="width: 18rem;">
+                <img src="<%=item.img %>" class="card-img-top" alt="..." width=300px height="250px">
+                <div class="card-body">
+                    <h2 class="card-title"><%= item.name %></h2>
+                    <h5 class="card-title">Rs <%= item.price %></h5>
 
-                <h3><%= item.name %></h3>
-                <h5><%= item.price %></h5>
-                <p><%= item.desc %></p>
-            </li>
+                    <p class="card-text"><%= item.desc %></p>
+                    <a href="#" class="btn btn-info">view</a>
+                </div>
+                </div>
+
+            </div>
+                
         <% } %>
-    </ul>
+        </div>
 
 </body>
 </html>

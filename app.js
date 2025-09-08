@@ -6,6 +6,7 @@ const { log } = require('console');
 const seedDB = require('./seed');
 const ProductRoutes = require('./routes/product');
 const ejsMate = require('ejs-mate');
+const methodOverride = require('method-override')
 
 
 mongoose.connect('mongodb://127.0.0.1:27017/shopping')
@@ -23,6 +24,7 @@ app.set('view engine', 'ejs');
 app.set('views' ,path.join(__dirname,'views'));
 app.use(express.static(path.join(__dirname,'public')));
 app.use(express.urlencoded({ extended: true }))
+app.use(methodOverride('_method'));
 
 // seeding DB
 // seedDB();

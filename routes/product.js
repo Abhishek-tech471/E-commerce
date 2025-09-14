@@ -1,5 +1,6 @@
 const express  = require('express');
 const Product = require('../models/Product.model');
+const Review = require('../models/Review.model');
 const router = express.Router();
 
 router.get('/products', async (req,res)=>{
@@ -59,6 +60,10 @@ router.patch('/product/:id', async (req,res)=>{
 
 router.delete('/product/:id', async (req,res)=>{
     let {id} = req.params;
+    // const product = await Product.findById(id);
+    // for(let id of product.reviews){
+    //     await Review.findByIdAndDelete(id);
+    // }
     await Product.findByIdAndDelete(id);
     res.redirect('/products');
 })

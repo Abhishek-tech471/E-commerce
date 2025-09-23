@@ -15,10 +15,11 @@ router.post('/product/:id/review', validateReview ,async (req,res)=>{
     product.reviews.push(review);
     await review.save();
     await product.save();
+    req.flash('success','Review added successfully');
     res.redirect(`/product/${id}`);
     }
     catch(e){
-        res.status(500).render('eror');
+        res.status(500).render('error');
     }
     
 })

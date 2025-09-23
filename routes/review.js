@@ -2,10 +2,10 @@ const express  = require('express');
 const Product = require('../models/Product.model');  
 const router = express.Router();
 const Review = require('../models/Review.model');
-const { validateReview } = require('../middleware');
+const { validateReview, isLoggedIn } = require('../middleware');
 
 
-router.post('/product/:id/review', validateReview ,async (req,res)=>{
+router.post('/product/:id/review',isLoggedIn, validateReview ,async (req,res)=>{
     try{
     let {id} = req.params;
     // console.log(id);

@@ -1,7 +1,7 @@
 const express  = require('express');
 const Product = require('../models/Product.model');
 const Review = require('../models/Review.model');
-const { validateProduct } = require('../middleware');
+const { validateProduct, isLoggedIn } = require('../middleware');
 const router = express.Router();
 
 router.get('/products', async (req,res)=>{
@@ -15,7 +15,7 @@ router.get('/products', async (req,res)=>{
     }
 })
 
-router.get('/product/new',(req,res)=>{
+router.get('/product/new',isLoggedIn,(req,res)=>{
     try{
     res.render('products/new');
     }
@@ -25,7 +25,7 @@ router.get('/product/new',(req,res)=>{
     }
 })
 
-router.post('/products',validateProduct,async(req,res)=>{
+router.post('/products',validateProduct,isLoggedIn,async(req,res)=>{
     try{
     // let data = req.params;
     let product = req.body;
@@ -54,7 +54,7 @@ router.post('/products',validateProduct,async(req,res)=>{
 
 })
 // show product
-router.get('/product/:id',async (req,res)=>{
+router.get('/product/:id',isLoggedIn,async (req,res)=>{
     try{
     let {id}=req.params;
     let foundProduct = await Product.findById(id).populate('reviews');
@@ -67,7 +67,7 @@ router.get('/product/:id',async (req,res)=>{
 })
 
 // form to edit product
-router.get('/product/:id/edit',async (req,res)=>{
+router.get('/product/:id/edit',isLoggedIn,async (req,res)=>{
     try{
     let {id}=req.params;
     let foundProduct = await Product.findById(id);
@@ -82,7 +82,7 @@ router.get('/product/:id/edit',async (req,res)=>{
 
 
 // edit data in db
-router.patch('/product/:id',validateProduct, async (req,res)=>{
+router.patch('/product/:id',validateProduct,isLoggedIn, async (req,res)=>{
     try{
     let {id}=req.params;
     let {name, img,price,desc} = req.body;
@@ -97,7 +97,7 @@ router.patch('/product/:id',validateProduct, async (req,res)=>{
     }
 })
 
-router.delete('/product/:id', async (req,res)=>{
+router.delete('/product/:id', isLoggedIn,async (req,res)=>{
     try{
     let {id} = req.params;
     // const product = await Product.findById(id);

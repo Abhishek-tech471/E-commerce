@@ -15,9 +15,11 @@
                     <h5 class="card-title">Rs <%= item.price %></h5>
                     <p class="card-text"><%= item.desc %></p>
                     <a href="/product/<%= item._id %>" class="btn btn-info">View Product</a>
+                    <% if(currentUser && currentUser.role === 'seller'){ %>
                     <form action="/product/<%= item._id %>?_method=DELETE" method="post">
                         <button class="btn btn-danger" type="submit">Delete</button>
                     </form>
+                    <% } %>
                 </div>
             </div>
         </div>

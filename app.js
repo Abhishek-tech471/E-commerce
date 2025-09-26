@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const ProductRoutes = require('./routes/product');
 const reviewRoutes = require('./routes/review');
 const authRoutes = require('./routes/auth')
+const cartRoutes = require('./routes/cart')
 const ejsMate = require('ejs-mate');
 const methodOverride = require('method-override')
 
@@ -76,6 +77,7 @@ app.use((req,res,next)=>{
 app.use(ProductRoutes);
 app.use(reviewRoutes);
 app.use(authRoutes);
+app.use(cartRoutes);
 
 app.listen(8080, ()=>{
     console.log("Server connected at PORT 8080");

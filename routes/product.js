@@ -1,7 +1,7 @@
 const express  = require('express');
 const Product = require('../models/Product.model');
 const Review = require('../models/Review.model');
-const { validateProduct, isLoggedIn, isSeller } = require('../middleware');
+const { validateProduct, isLoggedIn, isSeller, isProductAuthor} = require('../middleware');
 const router = express.Router();
 
 router.get('/products', async (req,res)=>{
@@ -54,7 +54,7 @@ router.post('/products',validateProduct,isLoggedIn,isSeller,async(req,res)=>{
 
 })
 // show product
-router.get('/product/:id',isLoggedIn,async (req,res)=>{
+router.get('/product/:id',isLoggedIn,isProductAuthor,async (req,res)=>{
     try{
     let {id}=req.params;
     let foundProduct = await Product.findById(id).populate('reviews');
@@ -97,13 +97,13 @@ router.patch('/product/:id',validateProduct,isLoggedIn,isSeller, async (req,res)
     }
 })
 
-router.delete('/product/:id', isLoggedIn,async (req,res)=>{
+router.delete('/product/:id', isLoggedIn,isProductAuthor,async (req,res)=>{
     try{
     let {id} = req.params;
-    // const product = await Product.findById(id);
-    // for(let id of product.reviews){
-    //     await Review.findByIdAndDelete(id);
-    // }
+    const product = await Product.findById(id);
+    for(let id of product.reviews){
+        await Review.findByIdAndDelete(id);
+    }
     await Product.findByIdAndDelete(id);
     req.flash('success','Product deleted successfully');
     res.redirect('/products');

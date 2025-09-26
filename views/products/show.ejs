@@ -16,8 +16,12 @@
                     <h2 class="card-title"><%= foundProduct.name %></h2>
                     <h5 class="card-subtitle mb-2 text-muted">Rs <%= foundProduct.price %></h5>
                     <p class="card-text"><%= foundProduct.desc %></p>
-                    <a href="/product/<%= foundProduct._id %>/edit" class="btn btn-info me-2">Edit</a>                    
-                    <a href="#" class="btn btn-secondary me-2">Add to Cart</a>
+                    <% if(currentUser && currentUser.role === 'seller'){ %>
+                    <a href="/product/<%= foundProduct._id %>/edit" class="btn btn-info me-2">Edit</a>  
+                    <% } %> 
+                    <form action="/user/<%= foundProduct._id %>/add" method="post">
+                        <button type="submit" class="btn btn-secondary me-2">Add to Cart</button>
+                    </form>
                     <a href="#" class="btn btn-success">Buy</a>
                 </div>
             </div>

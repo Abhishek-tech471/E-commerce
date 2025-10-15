@@ -1,10 +1,126 @@
 <% layout('./layouts/boilerplate') %>
-
 <%- include("../partials/navbar") %>
 
-          
-         <ul>
-            <% for(let item of user.cart){ %>
-                 <li><%= item.name%>  --->  <%= item.price %></li>
-            <% } %>
-         </ul>
+<div class="container">
+    <!-- Cart Header -->
+    <div class="cart-header">
+        <h1><i class="bi bi-cart3 me-2"></i>Your Shopping Cart</h1>
+        <p>Review your items and proceed to checkout</p>
+    </div>
+
+    <% if(user.cart && user.cart.length > 0) { %>
+        <div class="cart-content">
+            <!-- Cart Items -->
+            <div class="cart-items">
+                <h2 class="summary-title">Cart Items (<%= user.cart.length %>)</h2>
+                <ul>
+                    <% let total = 0; %>
+                    <% user.cart.forEach((item, index) => { %>
+                        <% total += item.price; %>
+                        <li class="cart-item">
+                            <div class="cart-item-info">
+                                <!-- Product Image -->
+                                <div class="cart-item-image">
+                                    <img src="<%= item.img %>" 
+                                         alt="<%= item.name %>" 
+                                         onerror="this.src='https://via.placeholder.com/80x80?text=Product+Image'">
+                                </div>
+                                
+                                <div class="cart-item-details">
+                                    <div class="cart-item-name"><%= item.name %></div>
+                                    <div class="cart-item-price">₹<%= item.price %></div>
+                                </div>
+                            </div>
+                            
+                            <div class="cart-item-actions">
+                                <form action="/user/<%= item._id %>/remove?_method=DELETE" method="POST" class="d-inline">
+                                    <button type="submit" class="remove-btn">
+                                        <i class="bi bi-trash"></i> Remove
+                                    </button>
+                                </form>
+                            </div>
+                        </li>
+                    <% }); %>
+                </ul>
+            </div>
+
+            <!-- Cart Summary -->
+            <div class="cart-summary">
+                <h3 class="summary-title">Order Summary</h3>
+                
+                <div class="summary-item">
+                    <span class="summary-label">Subtotal (<%= user.cart.length %> items)</span>
+                    <span class="summary-value">₹<%= total %></span>
+                </div>
+                
+                <div class="summary-item">
+                    <span class="summary-label">Shipping</span>
+                    <span class="summary-value">₹<%= total > 500 ? 'Free' : '50' %></span>
+                </div>
+                
+                <div class="summary-item">
+                    <span class="summary-label">Tax (18%)</span>
+                    <span class="summary-value">₹<%= (total * 0.18).toFixed(2) %></span>
+                </div>
+                
+                <div class="summary-total">
+                    <span class="total-label">Total Amount</span>
+                    <span class="total-value">
+                        ₹<%= (total + (total > 500 ? 0 : 50) + (total * 0.18)).toFixed(2) %>
+                    </span>
+                </div>
+
+                <button class="checkout-btn">
+                    <i class="bi bi-lock-fill"></i> Proceed to Checkout
+                </button>
+
+                <div class="continue-shopping">
+                    <a href="/products">
+                        <i class="bi bi-arrow-left"></i> Continue Shopping
+                    </a>
+                </div>
+            </div>
+        </div>
+    <% } else { %>
+        <!-- Empty Cart State -->
+        <div class="empty-cart">
+            <div class="empty-cart-icon">
+                <i class="bi bi-cart-x"></i>
+            </div>
+            <h2>Your cart is empty</h2>
+            <p>Looks like you haven't added any items to your cart yet.</p>
+            <a href="/products" class="shop-now-btn">
+                <i class="bi bi-bag"></i> Start Shopping
+            </a>
+        </div>
+    <% } %>
+</div>
+
+<script>
+// Add interactivity to the cart
+document.addEventListener('DOMContentLoaded', function() {
+    // Add smooth animations to cart items
+    const cartItems = document.querySelectorAll('.cart-item');
+    cartItems.forEach((item, index) => {
+        item.style.animationDelay = `${index * 0.1}s`;
+    });
+
+    // Add confirmation for remove actions
+    const removeButtons = document.querySelectorAll('.remove-btn');
+    removeButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            if (!confirm('Are you sure you want to remove this item from your cart?')) {
+                e.preventDefault();
+            }
+        });
+    });
+
+    // Handle image loading errors
+    const images = document.querySelectorAll('.cart-item-image img');
+    images.forEach(img => {
+        img.addEventListener('error', function() {
+            this.src = 'https://via.placeholder.com/80x80?text=Product+Image';
+        });
+    });
+});
+</script>

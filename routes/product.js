@@ -7,7 +7,7 @@ const router = express.Router();
 router.get('/products', async (req,res)=>{
     try{
     let products =await Product.find({});
-    res.render('products/index',{products});
+    res.render('products/index',{products, cssFile: "product.css"});
     }
     catch(e){
         res.status(500).render('eror', {err:e.message});
@@ -17,7 +17,7 @@ router.get('/products', async (req,res)=>{
 
 router.get('/product/new',isLoggedIn,(req,res)=>{
     try{
-    res.render('products/new');
+    res.render('products/new', {cssFile: "new.css"});
     }
     catch(e){
         res.status(500).render('eror');
@@ -54,11 +54,11 @@ router.post('/products',validateProduct,isLoggedIn,isSeller,async(req,res)=>{
 
 })
 // show product
-router.get('/product/:id',isLoggedIn,isProductAuthor,async (req,res)=>{
+router.get('/product/:id',isLoggedIn,async (req,res)=>{
     try{
     let {id}=req.params;
     let foundProduct = await Product.findById(id).populate('reviews');
-    res.render('products/show', {foundProduct, msg: req.flash('success')});
+    res.render('products/show', {foundProduct, msg: req.flash('success'), cssFile: "show.css"});
     }
     catch(e){
         res.status(500).render('eror');
@@ -72,7 +72,7 @@ router.get('/product/:id/edit',isLoggedIn,async (req,res)=>{
     let {id}=req.params;
     let foundProduct = await Product.findById(id);
 
-    res.render('products/edit', {foundProduct});
+    res.render('products/edit', {foundProduct, cssFile: "edit.css"});
     }
     catch(e){
         res.status(500).render('eror');

@@ -1,80 +1,161 @@
 <% layout('./layouts/boilerplate') %>
-
 <%- include("../partials/navbar") %>
 <%- include("../partials/flash") %>
 
-
-     
 <div class="container mt-4">
     <div class="row justify-content-evenly g-4">
         
-        <!-- Product Card -->
+        <!-- Product Card - Fixed Layout -->
         <div class="col-lg-4 col-md-6">
-            <div class="card shadow-sm">
-                <img src="<%= foundProduct.img %>" class="card-img-top" alt="..." style="height:250px; object-fit:cover;">
+            <div class="card shadow-sm product-card">
+                <div class="image-container">
+                    <img src="<%= foundProduct.img %>" class="card-img-top" alt="<%= foundProduct.name %>" 
+                         onerror="this.src='https://via.placeholder.com/400x300?text=Product+Image'">
+                    <div class="product-badge">Hot Item</div>
+                </div>
                 <div class="card-body text-center">
                     <h2 class="card-title"><%= foundProduct.name %></h2>
-                    <h5 class="card-subtitle mb-2 text-muted">Rs <%= foundProduct.price %></h5>
+                    <h5 class="card-subtitle mb-2 text-muted">₹<%= foundProduct.price %></h5>
                     <p class="card-text"><%= foundProduct.desc %></p>
-                    <% if(currentUser && currentUser.role === 'seller'){ %>
-                    <a href="/product/<%= foundProduct._id %>/edit" class="btn btn-info me-2">Edit</a>  
-                    <% } %> 
-                    <form action="/user/<%= foundProduct._id %>/add" method="post">
-                        <button type="submit" class="btn btn-secondary me-2">Add to Cart</button>
-                    </form>
-                    <a href="#" class="btn btn-success">Buy</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Review Section -->
-        <div class="col-lg-6 col-md-6">
-            <h2>Leave a Review</h2>
-            <form action="/product/<%= foundProduct._id %>/review" method="post" class="mb-4">
-                <div class="mb-3">
-                    <fieldset class="starability-basic">
-                        <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="0" checked />
-                        <input type="radio" id="rate1" name="rating" value="1" />
-                        <label for="rate1">1 star</label>
-                        <input type="radio" id="rate2" name="rating" value="2" />
-                        <label for="rate2">2 stars</label>
-                        <input type="radio" id="rate3" name="rating" value="3" />
-                        <label for="rate3">3 stars</label>
-                        <input type="radio" id="rate4" name="rating" value="4" />
-                        <label for="rate4">4 stars</label>
-                        <input type="radio" id="rate5" name="rating" value="5" />
-                        <label for="rate5">5 stars</label>
-                    </fieldset>
-                </div>
-                <div class="mb-3">
-                    <label class="form-label" for="comment">Comment:</label>
-                    <textarea class="form-control" rows="3" name="comment" id="comment"></textarea>
-                </div>
-                <button class="btn btn-success" type="submit">Add a Review</button>
-            </form>
-
-            <!-- Display Reviews -->
-            <div class="review-list">
-                <% for(let review of foundProduct.reviews){ %>
-                    <div class="card border-success mb-3">
-                        <div class="card-header bg-light text-success">
-                            <p class="mb-0 starability-result" data-rating="<%= review.rating %>">
-                                ⭐ Rated: <%= review.rating %> / 5
-                            </p>
-                        </div>
-                        <div class="card-body text-success">
-                            <h6 class="fw-bold">Comment:</h6>
-                            <p class="card-text"><%= review.comment %></p>
-                        </div>
-                        <% if(review.createdAt){ %>
-                        <div class="card-footer bg-light text-muted">
-                            <%= review.createdAt.toDateString() %>
-                        </div>
-                        <% } %>
+                    
+                    <div class="btn-group">
+                        <% if(currentUser && currentUser.role === 'seller'){ %>
+                        <a href="/product/<%= foundProduct._id %>/edit" class="btn btn-info">
+                            <i class="bi bi-pencil-square me-1"></i>Edit
+                        </a>  
+                        <% } %> 
+                        <form action="/user/<%= foundProduct._id %>/add" method="post" class="d-inline w-100">
+                            <button type="submit" class="btn btn-secondary w-100">
+                                <i class="bi bi-cart-plus me-1"></i>Add to Cart
+                            </button>
+                        </form>
+                        <a href="#" class="btn btn-success">
+                            <i class="bi bi-lightning me-1"></i>Buy Now
+                        </a>
                     </div>
-                <% } %>
+                </div>
             </div>
         </div>
 
+        <!-- Review Section - Fixed Layout -->
+        <div class="col-lg-6 col-md-6">
+            <div class="review-section">
+                <h2>Customer Reviews</h2>
+                
+                <!-- Review Form -->
+                <form action="/product/<%= foundProduct._id %>/review" method="post" class="review-form needs-validation" novalidate>
+                    <div class="mb-3">
+                        <label class="form-label">Rate this product:</label>
+                        <div class="star-rating">
+                            <div class="starability-basic">
+                            <input type="radio" id="rate5" name="rating" value="5" required>
+                            <label for="rate5" title="5 stars">★</label>
+
+                            <input type="radio" id="rate4" name="rating" value="4">
+                            <label for="rate4" title="4 stars">★</label>
+
+                            <input type="radio" id="rate3" name="rating" value="3">
+                            <label for="rate3" title="3 stars">★</label>
+
+                            <input type="radio" id="rate2" name="rating" value="2">
+                            <label for="rate2" title="2 stars">★</label>
+
+                            <input type="radio" id="rate1" name="rating" value="1">
+                            <label for="rate1" title="1 star">★</label>
+                        </div>
+
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label" for="comment">Your Review:</label>
+                        <textarea class="form-control" rows="4" name="comment" id="comment" 
+                                  placeholder="Share your experience with this product..." 
+                                  maxlength="500" required></textarea>
+                        <div class="form-text">
+                            <span id="charCount">0</span>/500 characters
+                        </div>
+                    </div>
+                    
+                    <button class="btn btn-success" type="submit" id="submitReview">
+                        <i class="bi bi-send me-1"></i>Submit Review
+                    </button>
+                </form>
+
+                <!-- Reviews List -->
+                <div class="review-list">
+                    <% if(foundProduct.reviews && foundProduct.reviews.length > 0) { %>
+                        <% foundProduct.reviews.forEach((review, index) => { %>
+                            <div class="card review-card" data-rating="<%= review.rating %>">
+                                <div class="card-header">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="starability-result">
+                                            <span>
+                                                <% for(let i = 0; i < 5; i++) { %>
+                                                    <% if(i < review.rating) { %>
+                                                        ★
+                                                    <% } else { %>
+                                                        ☆
+                                                    <% } %>
+                                                <% } %>
+                                            </span>
+                                            <span class="ms-2">Rated: <%= review.rating %>/5</span>
+                                        </div>
+                                        <% if(review.createdAt){ %>
+                                        <small class="text-muted"><%= review.createdAt.toLocaleDateString() %></small>
+                                        <% } %>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <p class="card-text mb-0"><%= review.comment %></p>
+                                </div>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <div class="empty-reviews">
+                            <i class="bi bi-chat-square-text display-4 text-muted mb-3"></i>
+                            <p class="text-muted">No reviews yet. Be the first to review this product!</p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<script>
+// Fix character counter
+document.addEventListener('DOMContentLoaded', function() {
+    const commentTextarea = document.getElementById('comment');
+    const charCount = document.getElementById('charCount');
+    
+    if (commentTextarea && charCount) {
+        // Initialize character count
+        charCount.textContent = commentTextarea.value.length;
+        
+        commentTextarea.addEventListener('input', function() {
+            charCount.textContent = this.value.length;
+            
+            // Change color based on character count
+            if (this.value.length > 450) {
+                charCount.style.color = '#e74c3c';
+            } else if (this.value.length > 400) {
+                charCount.style.color = '#f39c12';
+            } else {
+                charCount.style.color = '#27ae60';
+            }
+        });
+    }
+    
+    // Form validation
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+});
+</script>

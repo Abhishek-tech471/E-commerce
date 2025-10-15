@@ -5,7 +5,7 @@ const router = express.Router();
 
 
 router.get('/register', (req,res)=>{
-    res.render('auth/signup');
+    res.render('auth/signup', {cssFile:"signup.css"});
 })
 
 
@@ -28,7 +28,7 @@ router.post('/register',async (req,res)=>{
 // to get login form
 
 router.get('/login',(req,res)=>{
-    res.render('auth/login');
+    res.render('auth/login', {cssFile:"login.css"});
 })
 
 

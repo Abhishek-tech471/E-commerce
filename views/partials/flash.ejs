@@ -1,31 +1,77 @@
+<!-- Fixed Flash Messages Partial -->
+<div class="alert-container">
+    <% if(success && success.length){ %>
+        <div class="alert alert-success" role="alert" id="alert-<%= Date.now() %>">
+            <strong><%= success %></strong>
+            <button type="button" class="btn-close" onclick="closeAlert(this)" aria-label="Close"></button>
+        </div>
+    <% } %>
 
+    <% if(error && error.length){ %>
+        <div class="alert alert-danger" role="alert" id="alert-<%= Date.now() %>">
+            <strong><%= error %></strong>
+            <button type="button" class="btn-close" onclick="closeAlert(this)" aria-label="Close"></button>
+        </div>
+    <% } %>
+</div>
 
+<script>
+// Simple and reliable close function
+function closeAlert(button) {
+    const alert = button.closest('.alert');
+    if (alert) {
+        alert.style.animation = 'slideOutUp 0.3s ease-in forwards';
+        setTimeout(() => {
+            alert.remove();
+        }, 300);
+    }
+}
 
-<% if(success && success.length){ %>
-    <div class="alert alert-success" role="alert">
-                    <strong><%= success %></strong>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-<% } %>
+// Auto-dismiss functionality (optional)
+document.addEventListener('DOMContentLoaded', function() {
+    const alerts = document.querySelectorAll('.alert');
+    
+    alerts.forEach(alert => {
+        // Auto-dismiss after 5 seconds
+        setTimeout(() => {
+            if (alert.parentNode) {
+                alert.style.animation = 'slideOutUp 0.3s ease-in forwards';
+                setTimeout(() => {
+                    if (alert.parentNode) {
+                        alert.remove();
+                    }
+                }, 300);
+            }
+        }, 5000);
+        
+        // Add progress bar
+        const progressBar = document.createElement('div');
+        progressBar.style.position = 'absolute';
+        progressBar.style.bottom = '0';
+        progressBar.style.left = '0';
+        progressBar.style.height = '3px';
+        progressBar.style.background = 'currentColor';
+        progressBar.style.opacity = '0.3';
+        progressBar.style.animation = 'progressBar 5s linear forwards';
+        alert.appendChild(progressBar);
+    });
+});
 
+// Alternative: Using event delegation for better performance
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('btn-close')) {
+        closeAlert(e.target);
+    }
+});
+</script>
 
-<% if(error && error.length){ %>
-    <div class="alert alert-danger" role="alert">
-                    <strong><%= error %></strong>
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-<% } %>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<!-- If you're using Bootstrap JS, you can also use this approach -->
+<script>
+// Bootstrap 5 approach (if you have Bootstrap JS loaded)
+document.addEventListener('DOMContentLoaded', function() {
+    var alertList = document.querySelectorAll('.alert');
+    var alerts = Array.prototype.slice.call(alertList).map(function(element) {
+        return new bootstrap.Alert(element);
+    });
+});
+</script>

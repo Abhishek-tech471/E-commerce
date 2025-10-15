@@ -1,37 +1,193 @@
 <% layout('./layouts/boilerplate') %>
 
-
 <div class="row">
     <div class="col-md-6 mx-auto">
         <%- include("../partials/flash") %>
-        <h1>Sign up form</h1>
-        <form action="/register" method="post">
+        
+        <h1><i class="bi bi-person-plus me-2"></i>Create Account</h1>
+        
+        <form action="/register" method="post" class="needs-validation" novalidate>
+            <!-- Username -->
             <div>
-                <label class="form-label" for="username">UserName</label>
-                <input class="form-control" type="text" name="username" id="username" placeholder="username">
+                <label class="form-label" for="username">Username</label>
+                <input class="form-control" type="text" name="username" id="username" 
+                       placeholder="Choose a username" required minlength="3">
+                <div class="invalid-feedback">Please choose a username (min. 3 characters).</div>
             </div>
+            
+            <!-- Email -->
             <div>
                 <label class="form-label" for="email">Email</label>
-                <input class="form-control" type="email" name="email" id="email" placeholder="email">
+                <input class="form-control" type="email" name="email" id="email" 
+                       placeholder="Enter your email" required>
+                <div class="invalid-feedback">Please enter a valid email address.</div>
             </div>
+            
+            <!-- Role Selection -->
             <div class="mb-3">
-                <p class="mb-2">
-                    <div class="">
-                        <label class="form-label" for="buyer">Buyer:</label>
-                        <input class="form-check-input" type="radio" name="role" id="buyer" value="buyer">
+                <label class="form-label mb-3">Account Type</label>
+                <div class="role-selection">
+                    <div class="role-option" onclick="selectRole('buyer')">
+                        <div class="role-label">
+                            <input class="form-check-input" type="radio" name="role" id="buyer" value="buyer" required>
+                            <div class="role-icon">
+                                <i class="bi bi-cart3"></i>
+                            </div>
+                            <div class="role-text">
+                                <div class="form-label mb-0">Buyer</div>
+                                <div class="role-description">Shop and purchase products</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="">
-                        <label class="form-label" for="seller">Seller:</label>
-                        <input class="form-check-input" type="radio" name="role" id="seller" value="seller">
+                    
+                    <div class="role-option" onclick="selectRole('seller')">
+                        <div class="role-label">
+                            <input class="form-check-input" type="radio" name="role" id="seller" value="seller">
+                            <div class="role-icon">
+                                <i class="bi bi-shop"></i>
+                            </div>
+                            <div class="role-text">
+                                <div class="form-label mb-0">Seller</div>
+                                <div class="role-description">Sell your products</div>
+                            </div>
+                        </div>
                     </div>
-                </p>
+                </div>
+                <div class="invalid-feedback">Please select an account type.</div>
             </div>
-            <div>
+            
+            <!-- Password -->
+            <div style="position: relative;">
                 <label class="form-label" for="password">Password</label>
-                <input class="form-control" type="password" name="password" id="password" placeholder="password">
+                <input class="form-control" type="password" name="password" id="password" 
+                       placeholder="Create a password" required minlength="6">
+                <button type="button" class="password-toggle" id="passwordToggle">
+                    <i class="bi bi-eye"></i>
+                </button>
+                <div class="password-strength">
+                    <div class="strength-meter" id="strengthMeter"></div>
+                </div>
+                <div class="strength-text" id="strengthText"></div>
+                <div class="invalid-feedback">Password must be at least 6 characters long.</div>
             </div>
-            <button type="submit" class="btn btn-sm btn-success">Sign up</button>
-            <p class="fw-light mt-2">Already have an account, <a href="/login">login</a></p>
+            
+            <!-- Terms Agreement -->
+            <div class="form-check mt-3">
+                <input class="form-check-input" type="checkbox" id="terms" name="terms" required>
+                <label class="form-check-label" for="terms">
+                    I agree to the <a href="/terms" class="text-decoration-none">Terms of Service</a> 
+                    and <a href="/privacy" class="text-decoration-none">Privacy Policy</a>
+                </label>
+                <div class="invalid-feedback">You must agree to the terms and conditions.</div>
+            </div>
+            
+            <button type="submit" class="btn btn-success mt-4" id="signupBtn">
+                <i class="bi bi-person-plus me-2"></i>Create Account
+            </button>
+            
+            <p class="fw-light mt-3 text-center">
+                Already have an account? 
+                <a href="/login" class="fw-bold">Login here</a>
+            </p>
         </form>
     </div>
 </div>
+
+<script>
+// Password toggle functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const passwordToggle = document.getElementById('passwordToggle');
+    var passwordInput = document.getElementById('password');
+    
+    if (passwordToggle && passwordInput) {
+        passwordToggle.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            const icon = this.querySelector('i');
+            if (type === 'text') {
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        });
+    }
+    
+    // Role selection
+    window.selectRole = function(role) {
+        document.getElementById(role).checked = true;
+        
+        // Update visual selection
+        document.querySelectorAll('.role-option').forEach(option => {
+            option.classList.remove('selected');
+        });
+        
+        document.querySelector(`.role-option[onclick="selectRole('${role}')"]`).classList.add('selected');
+    };
+    
+    // Password strength meter
+    var passwordInput = document.getElementById('password');
+    const strengthMeter = document.getElementById('strengthMeter');
+    const strengthText = document.getElementById('strengthText');
+    
+    if (passwordInput && strengthMeter && strengthText) {
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+            let text = '';
+            
+            if (password.length >= 6) strength += 1;
+            if (password.length >= 8) strength += 1;
+            if (/[A-Z]/.test(password)) strength += 1;
+            if (/[0-9]/.test(password)) strength += 1;
+            if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+            
+            strengthMeter.className = 'strength-meter';
+            if (password.length === 0) {
+                strengthText.textContent = '';
+            } else if (strength <= 2) {
+                strengthMeter.classList.add('strength-weak');
+                strengthText.textContent = 'Weak';
+                strengthText.style.color = '#e74c3c';
+            } else if (strength <= 4) {
+                strengthMeter.classList.add('strength-medium');
+                strengthText.textContent = 'Medium';
+                strengthText.style.color = '#f39c12';
+            } else {
+                strengthMeter.classList.add('strength-strong');
+                strengthText.textContent = 'Strong';
+                strengthText.style.color = '#27ae60';
+            }
+        });
+    }
+    
+    // Form validation
+    const forms = document.querySelectorAll('.needs-validation');
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+            if (!form.checkValidity()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            form.classList.add('was-validated');
+        }, false);
+    });
+    
+    // Loading state for signup button
+    const signupBtn = document.getElementById('signupBtn');
+    if (signupBtn) {
+        signupBtn.addEventListener('click', function() {
+            if (document.querySelector('form').checkValidity()) {
+                this.classList.add('btn-loading');
+                this.disabled = true;
+                this.innerHTML = '<i class="bi bi-arrow-repeat me-2"></i>Creating Account...';
+            }
+        });
+    }
+});
+</script>
+
+<!-- Add Bootstrap Icons CDN in your layout file -->
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"> -->

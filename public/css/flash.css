@@ -1,0 +1,259 @@
+/* Flash Messages Styles */
+.alert {
+    border: none;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin: 1rem auto;
+    max-width: 1200px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+    animation: slideInDown 0.5s ease-out;
+    border-left: 4px solid;
+    font-weight: 500;
+}
+
+.alert::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+    pointer-events: none;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Success Alert */
+.alert-success {
+    background: linear-gradient(135deg, #d4edda, #c3e6cb);
+    color: #155724;
+    border-left-color: #28a745;
+}
+
+.alert-success::after {
+    content: '✓';
+    position: absolute;
+    right: 3.5rem; /* Moved left to avoid overlap with close button */
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #28a745;
+    opacity: 0.3;
+}
+
+/* Error Alert */
+.alert-danger {
+    background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+    color: #721c24;
+    border-left-color: #dc3545;
+}
+
+.alert-danger::after {
+    content: '!';
+    position: absolute;
+    right: 3.5rem; /* Moved left to avoid overlap with close button */
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #dc3545;
+    opacity: 0.3;
+}
+
+/* Alert Content */
+.alert strong {
+    display: block;
+    font-size: 1rem;
+    line-height: 1.5;
+    padding-right: 3rem; /* More padding for close button */
+}
+
+/* Close Button - FIXED */
+.btn-close {
+    position: absolute;
+    top: 50%;
+    right: 1rem;
+    transform: translateY(-50%);
+    width: 1.5rem;
+    height: 1.5rem;
+    background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e") center/1rem auto no-repeat;
+    border: none;
+    border-radius: 50%;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+    padding: 0;
+    cursor: pointer;
+    z-index: 10; /* Ensure it's above other content */
+}
+
+/* Custom close button colors */
+.alert-success .btn-close {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23155724'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e");
+}
+
+.alert-danger .btn-close {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23721c24'%3e%3cpath d='M.293.293a1 1 0 0 1 1.414 0L8 6.586 14.293.293a1 1 0 1 1 1.414 1.414L9.414 8l6.293 6.293a1 1 0 0 1-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 0 1-1.414-1.414L6.586 8 .293 1.707a1 1 0 0 1 0-1.414z'/%3e%3c/svg%3e");
+}
+
+.btn-close:hover {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.1);
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.btn-close:focus {
+    outline: 2px solid rgba(0, 0, 0, 0.3);
+    outline-offset: 2px;
+}
+
+/* Alert Container */
+.alert-container {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    z-index: 9999;
+    max-width: 400px;
+    width: 90%;
+}
+
+.alert-container .alert {
+    margin: 0.5rem 0;
+    animation: slideInRight 0.5s ease-out;
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Auto-dismiss animation */
+.alert.auto-dismiss {
+    animation: slideInRight 0.5s ease-out, slideOutUp 0.5s ease-in 4s forwards;
+}
+
+@keyframes slideOutUp {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+}
+
+/* Progress Bar for Auto-dismiss */
+.alert.with-progress {
+    overflow: hidden;
+}
+
+.alert.with-progress::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: currentColor;
+    opacity: 0.3;
+    animation: progressBar 5s linear forwards;
+}
+
+@keyframes progressBar {
+    from {
+        width: 100%;
+    }
+    to {
+        width: 0%;
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .alert {
+        margin: 0.5rem;
+        padding: 1rem 1.25rem;
+        border-radius: 10px;
+    }
+    
+    .alert strong {
+        font-size: 0.9rem;
+        padding-right: 2.5rem;
+    }
+    
+    .btn-close {
+        right: 0.75rem;
+        width: 1.25rem;
+        height: 1.25rem;
+        background-size: 0.875rem;
+    }
+    
+    .alert::after {
+        right: 2.5rem;
+        font-size: 1.25rem;
+    }
+    
+    .alert-container {
+        top: 80px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+        width: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .alert {
+        padding: 0.875rem 1rem;
+        margin: 0.25rem;
+    }
+    
+    .alert strong {
+        font-size: 0.85rem;
+        padding-right: 2rem;
+    }
+    
+    .btn-close {
+        right: 0.5rem;
+        width: 1.125rem;
+        height: 1.125rem;
+        background-size: 0.75rem;
+    }
+    
+    .alert::after {
+        right: 2rem;
+        font-size: 1rem;
+    }
+}
+
+/* Alternative: Using Bootstrap Icons */
+.btn-close.bi {
+    background: none;
+    font-family: 'Bootstrap Icons';
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-close.bi::before {
+    content: '\F659'; /* Bootstrap X icon */
+}
